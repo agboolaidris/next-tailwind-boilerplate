@@ -1,8 +1,8 @@
-import React from 'react'
+import React from "react";
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
-import Form from '../components/form'
-
+import Form from "../components/form";
+import Table from "../components/table";
 
 const Wrap = styled(Box)`
   width: 100%;
@@ -11,10 +11,11 @@ const Wrap = styled(Box)`
 `;
 function Home() {
   return (
-<Wrap>
-    <Form/>
-</Wrap>
-  )
+    <Wrap>
+      <Form />
+      <Table />
+    </Wrap>
+  );
 }
 
-export default Home
+export default Home;
