@@ -101,7 +101,7 @@ function Form() {
     <FormWrap onSubmit={handleSubmit}>
        
        <Stack direction={{xs:"column", md:"row"}} spacing={2} justifyContent="space-between">
-       <UploadField  handleChange={handleChangeFile} placeholder="upload file" />
+       <UploadField  handleChange={handleChangeFile}  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
         <Stack  direction={{xs:"column", md:"row"}} spacing={2}>
         <SelectField
               handleChange={handleChange}
