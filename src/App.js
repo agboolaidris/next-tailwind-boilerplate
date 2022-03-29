@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import Home from "./pages/home";
 
-axios.defaults.baseURL = "https://jsonplaceholder.typicode.com/posts";
+axios.defaults.baseURL = "https://jsonplaceholder.typicode.com";
 
 function App() {
   return (

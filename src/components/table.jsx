@@ -1,82 +1,66 @@
-import * as React from "react";
-import Paper from "@mui/material/Paper";
-import Input from "@mui/material/Input";
-import { styled } from "@mui/material/styles";
+import React, { useEffect, useState } from "react";
+import { Paper, styled, Input } from "@mui/material";
+import DateRange from "@mui/icons-material/DateRange";
+import * as PropTypes from "prop-types";
 import {
-  FilteringState,
-  GroupingState,
-  IntegratedFiltering,
-  IntegratedGrouping,
-  IntegratedPaging,
-  IntegratedSelection,
-  IntegratedSorting,
-  PagingState,
-  SelectionState,
-  SortingState,
-  DataTypeProvider,
-} from "@devexpress/dx-react-grid";
-import {
-  DragDropProvider,
   Grid,
-  GroupingPanel,
-  PagingPanel,
   Table,
-  TableFilterRow,
-  TableGroupRow,
   TableHeaderRow,
   TableSelection,
+  PagingPanel,
+  TableEditRow,
+  TableEditColumn,
+  TableFilterRow,
   Toolbar,
+  SearchPanel,
+  TableGroupRow,
+  GroupingPanel,
+  DragDropProvider,
 } from "@devexpress/dx-react-grid-material-ui";
-import { generateRows, globalSalesValues } from "../data/generator";
-
-const sales = generateRows({ columnValues: globalSalesValues, length: 1000 });
-
-const availableFilterOperations = [
-  "equal",
-  "notEqual",
-  "greaterThan",
-  "greaterThanOrEqual",
-  "lessThan",
-  "lessThanOrEqual",
-];
+import {
+  SortingState,
+  IntegratedSorting,
+  SelectionState,
+  PagingState,
+  IntegratedPaging,
+  IntegratedSelection,
+  EditingState,
+  FilteringState,
+  IntegratedFiltering,
+  DataTypeProvider,
+  SearchState,
+  GroupingState,
+  IntegratedGrouping,
+} from "@devexpress/dx-react-grid";
 
 const PREFIX = "Demo";
 const classes = {
-  currency: `${PREFIX}-currency`,
+  tableStriped: `${PREFIX}-tableStriped`,
+  root: `${PREFIX}-root`,
   numericInput: `${PREFIX}-numericInput`,
 };
-const StyledInput = styled(Input)(() => ({
+
+const FilterIcon = ({ type, ...restProps }) => {
+  if (type === "month") return <DateRange {...restProps} />;
+  return <TableFilterRow.Icon type={type} {...restProps} />;
+};
+
+const StyledInput = styled(Input)(({ theme }) => ({
+  [`&.${classes.root}`]: {
+    margin: theme.spacing(1),
+  },
   [`& .${classes.numericInput}`]: {
     fontSize: "14px",
+    textAlign: "right",
     width: "100%",
   },
 }));
-const StyledI = styled("i")(({ theme }) => ({
-  [`& .${classes.currency}`]: {
-    fontWeight: theme.typography.fontWeightMedium,
-  },
-}));
 
-const getInputValue = (value) => (value === undefined ? "" : value);
-
-const getColor = (amount) => {
-  if (amount < 3000) {
-    return "#F44336";
-  }
-  if (amount < 5000) {
-    return "#FFC107";
-  }
-  if (amount < 8000) {
-    return "#FF5722";
-  }
-  return "#009688";
-};
-
-const CurrencyEditor = ({ onValueChange, value }) => {
+const CurrencyEditor = ({ value, onValueChange }) => {
   const handleChange = (event) => {
     const { value: targetValue } = event.target;
     if (targetValue.trim() === "") {
-      onValueChange(undefined);
+      onValueChange();
       return;
     }
     onValueChange(parseInt(targetValue, 10));
@@ -86,9 +70,10 @@ const CurrencyEditor = ({ onValueChange, value }) => {
       type="number"
       classes={{
         input: classes.numericInput,
+        root: classes.root,
       }}
-      fullWidth={true}
-      value={getInputValue(value)}
+      fullWidth
+      value={value === undefined ? "" : value}
       inputProps={{
         min: 0,
         placeholder: "Filter...",
@@ -98,74 +83,128 @@ const CurrencyEditor = ({ onValueChange, value }) => {
   );
 };
 
-const CurrencyFormatter = ({ value }) => (
-  <StyledI className={classes.currency} style={{ color: getColor(value) }}>
-    {value.toLocaleString("en-US", { style: "currency", currency: "USD" })}
-  </StyledI>
-);
+CurrencyEditor.propTypes = {
+  value: PropTypes.number,
+  onValueChange: PropTypes.func.isRequired,
+};
 
-const CurrencyTypeProvider = (props) => (
-  <DataTypeProvider
-    formatterComponent={CurrencyFormatter}
-    editorComponent={CurrencyEditor}
-    availableFilterOperations={availableFilterOperations}
-    {...props}
-  />
-);
+CurrencyEditor.defaultProps = {
+  value: undefined,
+};
 
-export default function Index() {
-  const [columns] = React.useState([
-    { name: "product", title: "Product" },
-    { name: "region", title: "Region" },
-    { name: "amount", title: "Sale Amount" },
-    { name: "saleDate", title: "Sale Date" },
-    { name: "customer", title: "Customer" },
+const getRowId = (row) => row.id;
+export default function Index({ columns, data }) {
+  const [rows, setRows] = useState([]);
+  useEffect(() => {
+    setRows(data);
+  }, [data]);
+
+  const [selection, setSelection] = useState([]);
+  const [grouping, setGrouping] = useState([]);
+  const commitChanges = ({ added, changed, deleted }) => {
+    let changedRows;
+    if (added) {
+      const startingAddedId =
+        rows.length > 0 ? rows[rows.length - 1].id + 1 : 0;
+      changedRows = [
+        ...rows,
+        ...added.map((row, index) => ({
+          id: startingAddedId + index,
+          ...row,
+        })),
+      ];
+    }
+    if (changed) {
+      changedRows = rows.map((row) =>
+        changed[row.region] ? { ...row, ...changed[row.id] } : row
+      );
+    }
+    if (deleted) {
+      const deletedSet = new Set(deleted);
+      changedRows = rows.filter((row) => !deletedSet.has(row.id));
+    }
+    setRows(changedRows);
+  };
+
+  const [dateColumns] = useState(["saleDate"]);
+  const [dateFilterOperations] = useState([
+    "month",
+    "contains",
+    "startsWith",
+    "endsWith",
   ]);
-  const [rows] = React.useState(sales);
-  const [pageSizes] = React.useState([5, 10, 15]);
-  const [currencyColumns] = React.useState(["amount"]);
+  const [currencyColumns] = useState(["amount"]);
+  const [currencyFilterOperations] = useState([
+    "equal",
+    "notEqual",
+    "greaterThan",
+    "greaterThanOrEqual",
+    "lessThan",
+    "lessThanOrEqual",
+  ]);
+  const [filteringColumnExtensions] = useState([
+    {
+      columnName: "saleDate",
+      predicate: (value, filter, row) => {
+        if (!filter.value.length) return true;
+        if (filter && filter.operation === "month") {
+          const month = parseInt(value.split("-")[1], 10);
+          return month === parseInt(filter.value, 10);
+        }
+        return IntegratedFiltering.defaultPredicate(value, filter, row);
+      },
+    },
+  ]);
 
   return (
     <Paper>
-      <Grid rows={rows} columns={columns}>
-        <FilteringState
-          defaultFilters={[{ columnName: "saleDate", value: "2016-02" }]}
+      <Grid rows={rows} columns={columns} getRowId={getRowId}>
+        <DragDropProvider />
+        <SelectionState
+          selection={selection}
+          onSelectionChange={setSelection}
         />
+        <SearchState />
+        <PagingState defaultCurrentPage={0} pageSize={6} />
+        <EditingState onCommitChanges={commitChanges} />
         <SortingState
-          defaultSorting={[
-            { columnName: "product", direction: "asc" },
-            { columnName: "saleDate", direction: "asc" },
-          ]}
+          defaultSorting={[{ columnName: "product", direction: "asc" }]}
         />
+        <GroupingState grouping={grouping} onGroupingChange={setGrouping} />
+        <FilteringState defaultFilters={[]} />
 
-        <SelectionState />
-
-        <GroupingState
-          defaultGrouping={[{ columnName: "product" }]}
-          defaultExpandedGroups={["EnviroCare Max"]}
-        />
-        <PagingState />
-
+        <IntegratedFiltering columnExtensions={filteringColumnExtensions} />
+        <IntegratedSorting />
         <IntegratedGrouping />
         <IntegratedFiltering />
-        <IntegratedSorting />
-        <IntegratedPaging />
         <IntegratedSelection />
+        <IntegratedPaging />
 
-        <CurrencyTypeProvider for={currencyColumns} />
-
-        <DragDropProvider />
+        <DataTypeProvider
+          for={dateColumns}
+          availableFilterOperations={dateFilterOperations}
+        />
+        <DataTypeProvider
+          for={currencyColumns}
+          availableFilterOperations={currencyFilterOperations}
+          editorComponent={CurrencyEditor}
+        />
 
         <Table />
-        <TableSelection showSelectAll={true} />
-
-        <TableHeaderRow showSortingControls={true} />
-        <TableFilterRow showFilterSelector={true} />
-        <PagingPanel pageSizes={pageSizes} />
-
-        <TableGroupRow />
+        <TableSelection showSelectAll />
+        <TableHeaderRow showSortingControls showGroupingControls />
+        <PagingPanel />
+        <TableEditRow />
+        <TableEditColumn showAddCommand showEditCommand showDeleteCommand />
         <Toolbar />
-        <GroupingPanel showSortingControls={true} />
+        <SearchPanel />
+        <TableGroupRow />
+        <TableFilterRow
+          showFilterSelector
+          iconComponent={FilterIcon}
+          messages={{ month: "Month equals" }}
+        />
+        <GroupingPanel showGroupingControls />
       </Grid>
     </Paper>
   );
