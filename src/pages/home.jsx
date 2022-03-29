@@ -20,7 +20,6 @@ function Home() {
   ]);
   const [data, setData] = useState([]);
   useEffect(() => {
-    setData([{ name: "idris", email: "sssgg" }]);
     //@API CALL for location select data
     axios.get("/users").then((res) => {
       setData(res.data);
