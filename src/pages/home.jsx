@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import styled from "@emotion/styled";
 import { Box } from "@mui/material";
-import Form from "../components/form";
-import Table from "../components/table";
+import Table from "../components/table/table";
+import styled from "@emotion/styled";
 import axios from "axios";
 
 const Wrap = styled(Box)`
@@ -10,15 +9,15 @@ const Wrap = styled(Box)`
   background-color: #f7f7f7;
   min-height: 100vh;
 `;
-function Home() {
+function Example() {
   const [columns] = useState([
-    { name: "name", title: "Name" },
-    { name: "username", title: "Username" },
-    { name: "email", title: "Email" },
-    { name: "phone", title: "Phone Number" },
-    { name: "website", title: "website" },
+    { name: "FirstName", title: "First Name" },
+    { name: "LastName", title: "Last Name" },
+    { name: "Position", title: "Position" },
+    { name: "Address", title: "Address" },
   ]);
   const [data, setData] = useState([]);
+
   useEffect(() => {
     //@API CALL for location select data
     axios.get("/users").then((res) => {
@@ -28,10 +27,9 @@ function Home() {
 
   return (
     <Wrap>
-      {/* <Form /> */}
       <Table columns={columns} data={data} />
     </Wrap>
   );
 }
 
-export default Home;
+export default Example;

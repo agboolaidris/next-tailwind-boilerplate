@@ -2,13 +2,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import Home from "./pages/home";
 
-axios.defaults.baseURL = "https://jsonplaceholder.typicode.com";
+axios.defaults.baseURL = "http://localhost:3500/";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />}></Route>
+        <Route path="/" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );
