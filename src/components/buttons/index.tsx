@@ -13,7 +13,7 @@ const buttonstyle = cva("rounded", {
     },
     size: {
       sm: "p-2",
-      md: "py-2 p-4",
+      md: "py-2 px-4",
     },
   },
 });
@@ -21,8 +21,14 @@ const buttonstyle = cva("rounded", {
 type Props = VariantProps<typeof buttonstyle> &
   DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
 
-export const Button = ({ variants, className, children, ...rest }: Props) => {
-  const style = buttonstyle({ variants, className });
+export const Button = ({
+  variants,
+  size,
+  className,
+  children,
+  ...rest
+}: Props) => {
+  const style = buttonstyle({ variants, size, className });
   return (
     <button className={style} {...rest}>
       {children}

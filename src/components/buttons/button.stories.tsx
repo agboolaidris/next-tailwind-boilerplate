@@ -11,6 +11,9 @@ export default {
     children: "Submit",
     onClick: () => alert(),
   },
+  parameters: {
+    layout: "fullscreen",
+  },
 } as ComponentMeta<typeof Button>;
 
 const Template: ComponentStory<typeof Button> = (arg) => <Button {...arg} />;
@@ -18,13 +21,12 @@ const Template: ComponentStory<typeof Button> = (arg) => <Button {...arg} />;
 export const primary = Template.bind({});
 
 primary.args = {
-  size: "sm",
+  size: "md",
   variants: "primary",
 };
 
 export const Secondary = Template.bind({});
-
 primary.args = {
-  size: "sm",
+  size: "md",
   variants: "secondary",
 };

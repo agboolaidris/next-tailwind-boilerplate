@@ -13,7 +13,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="min-h-screen  bg-gray-50">
-        <Button>Submit</Button>
+        <Button size="sm">Submit</Button>
+        <Button size="md">Submit</Button>
       </main>
     </>
   );
