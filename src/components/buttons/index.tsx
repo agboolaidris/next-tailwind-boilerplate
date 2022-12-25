@@ -1,10 +1,19 @@
 import React, { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 import { cva, VariantProps } from "class-variance-authority";
 
-const buttonstyle = cva("rounded p-4", {
+const buttonstyle = cva("rounded", {
+  defaultVariants: {
+    variants: "primary",
+    size: "sm",
+  },
   variants: {
-    kind: {
-      primary: "",
+    variants: {
+      primary: "bg-blue-500 text-white hover:bg-blue-600",
+      secondary: "border border-gray-100 hover:bg-gray-100",
+    },
+    size: {
+      sm: "p-2",
+      md: "py-2 p-4",
     },
   },
 });
@@ -12,10 +21,10 @@ const buttonstyle = cva("rounded p-4", {
 type Props = VariantProps<typeof buttonstyle> &
   DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
 
-export const Button = ({ kind, className, children, ...props }: Props) => {
-  const style = buttonstyle({ kind, className });
+export const Button = ({ variants, className, children, ...rest }: Props) => {
+  const style = buttonstyle({ variants, className });
   return (
-    <button className={style} {...props}>
+    <button className={style} {...rest}>
       {children}
     </button>
   );
