@@ -10,7 +10,8 @@ Boilerplate for Nextjs and TailwindCSS with some advance fixtures
 ##### stack:
 
 1. Next
-2. typescript
+2. Typescript
 3. TailwindCSS
 4. class-variance-authority
 5. Classnames
+6. Story-book
