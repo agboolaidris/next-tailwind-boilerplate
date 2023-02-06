@@ -1,9 +1,11 @@
 import Head from "next/head";
 import { Inter } from "@next/font/google";
 import { Button } from "@ui/buttons";
-const inter = Inter({ subsets: ["latin"] });
+import { NextPageWithLayout } from "./_app";
+import { Layout } from "src/layouts";
+import { ReactElement } from "react";
 
-export default function Home() {
+const Home: NextPageWithLayout = () => {
   return (
     <>
       <Head>
@@ -12,10 +14,15 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="min-h-screen  bg-gray-50">
+      <main className="bg-gray-50  container mx-auto h-60">
+        <h1>Tailwindcss, nextjs, typescript && class-variance-authority</h1>
         <Button size="sm">Submit</Button>
         <Button size="md">Submit</Button>
       </main>
     </>
   );
-}
+};
+
+Home.getLayout = (page: ReactElement) => <Layout>{page}</Layout>;
+
+export default Home;
