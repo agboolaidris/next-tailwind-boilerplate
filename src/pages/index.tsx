@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { Inter } from "@next/font/google";
 import { Button } from "@ui/buttons";
 import { NextPageWithLayout } from "./_app";
 import { Layout } from "src/layouts";
