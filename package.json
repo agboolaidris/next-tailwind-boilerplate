@@ -5,10 +5,17 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "preexport": "npm run build",
+    "export": "next export",
+    "prestart": "npm run export",
+    "start": "serve out",
+    "lint": "tsc && next lint && prettier --check ./**/*.{ts,tsx}",
+    "lint:fix": "eslint --fix . && prettier --write .",
+    "clean": "rm -rf build node_modules",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "prepare": "husky install",
+    "pre-commit": "yarn lint"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.7",
@@ -40,6 +47,15 @@
     "babel-loader": "^8.3.0",
     "eslint-plugin-storybook": "^0.6.8",
     "postcss": "^8.4.20",
-    "tailwindcss": "^3.2.4"
+    "eslint-config-next": "^13.0.6",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
+    "eslint-plugin-sort-keys-fix": "^1.1.2",
+    "husky": "^8.0.0",
+    "prettier": "^2.7.1",
+    "prettier-plugin-tailwindcss": "^0.1.13",
+    "tailwindcss": "^3.2.4",
+    "tsconfig-paths-webpack-plugin": "^4.0.0"
   }
 }

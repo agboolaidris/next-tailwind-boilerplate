@@ -1,19 +1,20 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { Button } from "./index";
+import { ComponentMeta, ComponentStory } from '@storybook/react';
+
+import { Button } from './index';
 
 export default {
-  title: "Button",
-  component: Button,
   argTypes: {
     //size: { control: "color" },
   },
   args: {
-    children: "Submit",
+    children: 'Submit',
     onClick: () => alert(),
   },
+  component: Button,
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
+  title: 'Button',
 } as ComponentMeta<typeof Button>;
 
 const Template: ComponentStory<typeof Button> = (arg) => <Button {...arg} />;
@@ -21,12 +22,12 @@ const Template: ComponentStory<typeof Button> = (arg) => <Button {...arg} />;
 export const primary = Template.bind({});
 
 primary.args = {
-  size: "md",
-  variants: "primary",
+  size: 'md',
+  variants: 'primary',
 };
 
 export const Secondary = Template.bind({});
 primary.args = {
-  size: "md",
-  variants: "secondary",
+  size: 'md',
+  variants: 'secondary',
 };
