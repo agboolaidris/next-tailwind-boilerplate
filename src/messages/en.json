@@ -1,0 +1,13 @@
+{
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Sign in to continue to your account",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "signIn": "Sign In",
+    "rememberMe": "Remember me",
+    "orLoginWith": "Or Log in with",
+    "continueWithGoogle": "Continue with Google"
+  }
+}

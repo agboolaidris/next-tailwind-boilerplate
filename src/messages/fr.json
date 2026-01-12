@@ -1,0 +1,13 @@
+{
+  "login": {
+    "title": "Bon retour",
+    "subtitle": "Connectez-vous pour continuer à votre compte",
+    "email": "Email",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié?",
+    "signIn": "Se connecter",
+    "rememberMe": "Se souvenir de moi",
+    "orLoginWith": "Se connecter avec",
+    "continueWithGoogle": "Continuer avec Google"
+  }
+}
